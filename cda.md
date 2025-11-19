@@ -621,68 +621,25 @@ print(paste("Accuracy:", round(accuracy, 2)))
 [1] "Accuracy: 1"
 ```
 linear regression with gradient descent 
-``` R
+``` Python
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import make_regression
 
-Step 1: Data Preparation set.seed(42) n <- 100 x <- runif(n, min = 0, max = 100) y <- 50 * x + 100 + rnorm(n, mean
-= 0, sd = 10)
-Step 2:Initialize Parameters m <- 0 # Initial slope b <- 0 # Initial intercept alpha <- 0.00001 # Learning rate
-iterations <- 1000 # Number of iterations
-Step 3: Manual Gradient Descent Implementation
-Step 4: Summary of Results cat("Final Slope (m):", final_m, "\nFinal Intercept (b):", final_b, "\n")
-keyboard_arrow_down Experiment 11
-# Step 1: Data Preparation
-set.seed(42)
-n <- 100
-x <- runif(n, min = 0, max = 100) # Independent variable
-y <- 50 * x + 100 + rnorm(n, mean = 0, sd = 10) # Dependent variable with noise
-# Plot the data
-plot(x, y, main = "Scatter plot of x vs y",
-xlab = "x", ylab = "y", pch = 19, col = "blue")
-# Step 2: Initialize Parameters
-m <- 0 # Initial slope
-b <- 0 # Initial intercept
-alpha <- 0.00001 # Learning rate
-iterations <- 1000 # Number of iterations
-# Step 3: Manual Gradient Descent Implementation
-# Gradient Descent Loop
-n <- length(y)
-for (i in 1:iterations) {
-# Predicted values
-y_pred <- m * x + b
-# Calculate gradients
-D_m <- (-2/n) * sum(x * (y - y_pred)) # Partial derivative w.r.t m
-D_b <- (-2/n) * sum(y - y_pred) # Partial derivative w.r.t b
-# Update parameters
-m <- m - alpha * D_m
-b <- b - alpha * D_b
-# Optional: print progress every 100 iterations
-if (i %% 100 == 0) {
-cat("Iteration:", i, " Slope:", m, " Intercept:", b, "\n")
-}
-}
-Iteration: 100 Slope: 51.40552 Intercept: 0.7858078
-Iteration: 200 Slope: 51.43084 Intercept: 0.8339289
-Iteration: 300 Slope: 51.43017 Intercept: 0.8816533
-Iteration: 400 Slope: 51.42949 Intercept: 0.9293539
-Iteration: 500 Slope: 51.4288 Intercept: 0.977031
-Iteration: 600 Slope: 51.42812 Intercept: 1.024685
-Iteration: 700 Slope: 51.42743 Intercept: 1.072314
-Iteration: 800 Slope: 51.42675 Intercept: 1.119921
-Iteration: 900 Slope: 51.42607 Intercept: 1.167504
-Iteration: 1000 Slope: 51.42538 Intercept: 1.215063
-# Step 4: Summary of Results
-final_m <- m
-final_b <- b
-cat("\nFinal Slope (m):", final_m, "\nFinal Intercept (b):", final_b, "\n")
-Final Slope (m): 51.42538
-Final Intercept (b): 1.215063
-# Step 5: Plot Regression Line
-plot(x, y, main = "Linear Regression with Gradient Descent",
-xlab = "x", ylab = "y", pch = 19, col = "blue")
-abline(a = final_b, b = final_m, col = "red", lwd = 2)
-Double-click (or enter) to edit
-format_size format_bold format_italic code link image format_quote format_list_numbered format_list_bulleted horizontal_rule ψ mood Close
-```Python
-first_str<- "hello world"
-first_str
+learning_rate = 0.1
+n_iterations = 100
+
+for _ in range(n_iterations):
+y_pred x_b.dot(theta)
+gradients (2/m) X_b.T.dot(y_predy)
+theta learning_rate gradients
+
+plt.figure(figsize=(10, 5))
+plt.scatter(x, y, color="blue", label="Actual Data")
+plt.plot(x, x_b.dot(theta), color="red", label="Optimized Line (With GD)")
+plt.xlabel("Feature")
+plt.ylabel("Target")
+plt.title("Linear Regression With Gradient Descent")
+plt.legend()
+plt.show()
 ```
