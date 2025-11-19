@@ -559,66 +559,64 @@ abline(0, 1, col = "red", lwd = 2)  # 45-degree line for perfect prediction
 ```
 Logistics regression in R
 ```
-# Read CSV file
-LungCapData <- read.csv("LungCapData.csv", header = TRUE, stringsAsFactors = TRUE)
-# View dataset
-print(LungCapData)
- LungCap Age Height Smoke Gender Caesarean
-1 6.475 6 62.1 no male no
-2 10.125 18 74.7 yes female no
-3 9.550 16 69.7 no female yes
-4 11.125 14 71.0 no male no
-5 4.800 5 56.9 no male no
-6 6.225 11 58.7 no female no
-7 4.950 8 63.3 no male yes
-0 1
-4 3
-# Create a binary outcome
-LungCapData$HighLungCap <- ifelse(LungCapData$LungCap > 7, 1, 0)
-# Convert to factor
-LungCapData$HighLungCap <- as.factor(LungCapData$HighLungCap)
-# Check
-table(LungCapData$HighLungCap)
-LungCapData$Smoke <- as.factor(LungCapData$Smoke)
-LungCapData$Gender <- as.factor(LungCapData$Gender)
-LungCapData$Caesarean <- as.factor(LungCapData$Caesarean)
-Warning message:
-“glm.fit: fitted probabilities numerically 0 or 1 occurred”
-Call:
-glm(formula = HighLungCap ~ Age + Height + Smoke + Gender + Caesarean,
- family = binomial, data = LungCapData)
-Coefficients:
- Estimate Std. Error z value Pr(>|z|)
-(Intercept) -2.983e+02 1.505e+06 0 1
-Age 1.159e+00 5.500e+04 0 1
-Height 4.460e+00 3.445e+04 0 1
-Smokeyes -3.110e+01 2.364e+05 0 1
-Gendermale -9.783e+00 2.952e+05 0 1
-Caesareanyes -7.255e+00 1.069e+05 0 1
-(Dispersion parameter for binomial family taken to be 1)
- Null deviance: 9.5607e+00 on 6 degrees of freedom
-Residual deviance: 4.1691e-10 on 1 degrees of freedom
-AIC: 12
-Number of Fisher Scoring iterations: 23
-# Logistic Regression: HighLungCap ~ Age + Height + Smoke + Gender + Caesarean
-logit_model <- glm(HighLungCap ~ Age + Height + Smoke + Gender + Caesarean,
-data = LungCapData, family = binomial)
-# Summary of the model
-summary(logit_model)
-# Predict probabilities
-pred_prob <- predict(logit_model, type = "response")
-# Convert probabilities to class labels (0/1)
-pred_class <- ifelse(pred_prob > 0.5, 1, 0)
- Actual
-Predicted 0 1
- 0 4 0
- 1 0 3
-# Confusion matrix
-table(Predicted = pred_class, Actual = LungCapData$HighLungCap)
-# Accuracy
-accuracy <- mean(pred_class == LungCapData$HighLungCap)
-print(paste("Accuracy:", round(accuracy, 2)))
-[1] "Accuracy: 1"
+# Import Dataset
+install.packages("dplyr")
+library(dplyr)
+
+head(mtcars)
+
+# Splitting the Dataset
+install.packages("caTools") 
+library(caTools)
+
+split <- sample.split(mtcars, SplitRatio = 0.8)
+
+train_reg <- subset(mtcars, split == "TRUE")
+test_reg <- subset(mtcars, split == "FALSE")
+
+# Building the model
+logistic_model <- glm(vs ~ wt + disp,
+                    data = train_reg,
+                    family = "binomial")
+logistic_model
+
+summary(logistic_model)
+
+#
+Call: Displays the formula and dataset used for the model.
+Deviance Residuals: Show how well the model fits the data. Smaller values indicate a better fit.
+Coefficients: Reflect the impact of each predictor on the outcome. Includes standard errors.
+Significance Codes: Indicate the statistical significance of each predictor (e.g., ‘***’ means highly significant).
+Dispersion Parameter: Set to 1 for logistic regression, as it uses a binomial distribution.
+Null Deviance: The model’s deviance without predictors (only the intercept).
+Residual Deviance: The model’s deviance after adding predictors. A lower value suggests a better fit.
+AIC: Used to compare models. Lower AIC indicates a better model with fewer unnecessary variables.
+Fisher Scoring Iterations: The number of steps taken to find the best-fitting model.
+#
+
+# Predict test data
+predict_reg <- predict(logistic_model,
+                       test_reg, type = "response")
+
+predict_reg <- as.data.frame(predict_reg)
+predict_reg
+
+# Plotting a Confusion Matrix
+library(ggplot2)
+library(reshape2)
+
+conf_matrix <- table(test_reg$vs, predict_reg)
+
+# Reshape the confusion matrix for ggplot2
+conf_matrix_melted <- as.data.frame(conf_matrix)
+colnames(conf_matrix_melted) <- c("Actual", "Predicted", "Count")
+
+ggplot(conf_matrix_melted, aes(x = Actual, y = Predicted, fill = Count)) +
+  geom_tile() +
+  geom_text(aes(label = Count), color = "black", size = 6) +  # Add text labels
+  scale_fill_gradient(low = "white", high = "blue") +
+  labs(title = "Confusion Matrix Heatmap", x = "Actual", y = "Predicted") +
+  theme_minimal()
 ```
 linear regression with gradient descent 
 ``` Python
